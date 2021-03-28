@@ -42,15 +42,8 @@ if(storageMovie.indexOf(userSelection) === -1) {
     storageMovie.push(userSelection);
     localStorage.setItem("storageMovie", JSON.stringify(storageMovie));
     userInputTrimmed.text(userSelection);
-
-
+    previousSearchesBox.append(userInputTrimmed);
 }
-
-
-
-
-
-
 
     // console.log(completeUrl);
     fetch(completeUrl)
@@ -96,6 +89,27 @@ if(storageMovie.indexOf(userSelection) === -1) {
                 });
         })
 }
+
+//Function to pull movie name from storage
+function pullStorageMovie() {
+    if(localStorage.getItem("storageMovie")) {
+        storageMovie = JSON.parse(localStorage.getItem("storageMovie"));
+        for (let k = 0; k < storageMovie.length; k++) {
+            var userInputTrimmed = $('<button class="previousSearchItemBtn" type="button>');
+            userInputTrimmed.click(function(event) {
+                event.preventDefault();
+                var value = $(this).text();
+                console.log(value);
+                searching(event, value);
+            });
+            userInputTrimmed.text(storageMovie[k]);
+            userInputTrimmed.on("click",searching);
+            previousSearchesBox.append(userInputTrimmed);    
+        }
+    }
+}
+
+pullStorageMovie();
 
 searchBtnEl.on("click", searching);
 
