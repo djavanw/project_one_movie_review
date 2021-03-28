@@ -1,7 +1,7 @@
 const movieApiKey = "f3192513";
 //Reminder, below line is pure JavaScript
 var searchInputEl = document.querySelector("#searchInput");
-// var formSearchEl = document.querySelector("#formSearch"); 
+var formSearchEl = document.querySelector("#formSearch"); 
 var searchBtnEl = $("#searchBtn");
 var searchNewBtnEl = document.querySelector("#searchBtn");
 var thumbnailEl = $("#thumbnail");
@@ -19,6 +19,7 @@ var closeModalEl = document.getElementById("closeModal");
 //Globabl variables for local storage for movie names
 var storageMovie = [];
 var previousSearchesBox = $("#previousSearches");
+var userSelection;
 
 
 var requestOptions = {
@@ -28,27 +29,29 @@ var requestOptions = {
 
 //Function to start the movie search
 function searching(event, userSelection) {
-    console.log(event);
     event.preventDefault();
-    resetPage();
+    resetPage(); 
+    console.log(event);
     var omdbUrlFront = "https://www.omdbapi.com/?apikey=" + movieApiKey + "&t=";
-    var userSelection = searchInputEl.value.trim();
+    // userSelection = searchInputEl.value.trim();
     var completeUrl = omdbUrlFront + userSelection;
+    console.log(completeUrl);
+    console.log(userSelection);
     var userInputTrimmed = $('<button class="previousSearchItemBtn" type="button">');
     userInputTrimmed.click(function(event) {
-        event.preventDefault();
-        var value = $(this).text();
-        console.log(value);
-        searching(event, value);
+         event.preventDefault();
+         var value = $(this).text();
+         console.log(value);
+         searching(event, value);
     });
 
-//Element in localstorage check
-if(storageMovie.indexOf(userSelection) === -1) {
-    storageMovie.push(userSelection);
-    localStorage.setItem("storageMovie", JSON.stringify(storageMovie));
-    userInputTrimmed.text(userSelection);
-    previousSearchesBox.append(userInputTrimmed);
-}
+    //Element in localstorage check
+    if(storageMovie.indexOf(userSelection) === -1) {
+        storageMovie.push(userSelection);
+        localStorage.setItem("storageMovie", JSON.stringify(storageMovie));
+        userInputTrimmed.text(userSelection);
+        previousSearchesBox.append(userInputTrimmed);
+    }
 
     // console.log(completeUrl);
     fetch(completeUrl)
@@ -56,8 +59,8 @@ if(storageMovie.indexOf(userSelection) === -1) {
             return response.json()
         })
         .then(function (data) {
-            // console.log(data);
-            if (data.Response === "True") {
+            console.log(data);
+           //if (data.Response === "True") {
                 plotText = data.Plot;
                 thumbnailEl.attr("src", data.Poster);
                 titleEl.text(data.Title);
@@ -65,13 +68,13 @@ if(storageMovie.indexOf(userSelection) === -1) {
                 plotSumEl.text(plotText);
                 for (var i = 0; i < data.Ratings.length; i++) {
                     $(`#ratings${i}`).text(`${data.Ratings[i].Source}: ${data.Ratings[i].Value}`);
-                }
-            } else {
-                modalEl.style.display = "block";
-                closeModalEl.addEventListener("click", turnModalOff);
-                window.addEventListener("click", turnModalOff);
+            //    }
+            //} else {
+            //      modalEl.style.display = "block";
+            //      closeModalEl.addEventListener("click", turnModalOff);
+            //      window.addEventListener("click", turnModalOff);
 
-            }
+           }
 
             function turnModalOff() {
                 modalEl.style.display = "none";
@@ -95,12 +98,18 @@ if(storageMovie.indexOf(userSelection) === -1) {
         });
 }
 
+
+
+
+
+
 //Function to pull movie name from storage
 function pullStorageMovie() {
     if(localStorage.getItem("storageMovie")) {
         storageMovie = JSON.parse(localStorage.getItem("storageMovie"));
         for (let k = 0; k < storageMovie.length; k++) {
             var userInputTrimmed = $('<button class="previousSearchItemBtn" type="button">');
+            console.log(userInputTrimmed);
             userInputTrimmed.click(function(event) {
                 event.preventDefault();
                 var value = $(this).text();
@@ -117,7 +126,7 @@ function pullStorageMovie() {
 pullStorageMovie();
 
 // searchBtnEl.on("click", searching);
-searchNewBtnEl.addEventListener("click", function(event) {
+formSearchEl.addEventListener("submit", function(event) {
     event.preventDefault();
     searching(event, searchInputEl.value);
 });
