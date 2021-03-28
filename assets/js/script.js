@@ -84,17 +84,18 @@ function resetPage() {
 }
 
 //Error Message status = data.Response
-function errorMessage(status) {
-    if (status === "True") {
-        return;
-    } else {
-        // console.log("Error!");
-        $(".modal").attr({
-            "class": "is-active"
-        })
-        $(".modal-content").text(`${userSelection} is not recognized as a movie title. Please check the spelling and try again.`)
-    }
-}
+//This code does not work and was replaced on line 44 - 52
+// function errorMessage(status) {
+//     if (status === "True") {
+//         return;
+//     } else {
+//         // console.log("Error!");
+//         $(".modal").attr({
+//             "class": "is-active"
+//         })
+//         $(".modal-content").text(`${userSelection} is not recognized as a movie title. Please check the spelling and try again.`)
+//     }
+// }
 
 //Yoda Translation
 function translateYoda() {
