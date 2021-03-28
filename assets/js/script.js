@@ -16,6 +16,7 @@ var closeModalEl = document.getElementById("closeModal");
 
 //Local storage for movie names
 var storageMovie = [];
+var previousSearchesBox = $("#previousSearches");
 
 var requestOptions = {
     method: "Get",
@@ -40,6 +41,7 @@ function searching(event) {
 if(storageMovie.indexOf(userSelection) === -1) {
     storageMovie.push(userSelection);
     localStorage.setItem("storageMovie", JSON.stringify(storageMovie));
+    userInputTrimmed.text(userSelection);
 
 
 }
