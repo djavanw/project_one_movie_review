@@ -1,6 +1,7 @@
 const movieApiKey = "f3192513";
 //Reminder, below line is pure JavaScript
-var searchInputEl = document.querySelector("#searchInput"); 
+var searchInputEl = document.querySelector("#searchInput");
+var formSearchEl = document.querySelector("#formSearch"); 
 var searchBtnEl = $("#searchBtn");
 var thumbnailEl = $("#thumbnail");
 var yearEl = $("#year");
@@ -14,22 +15,25 @@ var plotText;
 var modalEl = document.getElementById("errorModal");
 var closeModalEl = document.getElementById("closeModal");
 
-//Local storage for movie names
+//Globabl variables for local storage for movie names
 var storageMovie = [];
 var previousSearchesBox = $("#previousSearches");
+
 
 var requestOptions = {
     method: "Get",
     redirect: "Follow"
 };
 
-function searching(event) {
+//Function to start the movie search
+function searching(event, userSelection) {
+    console.log(event);
     event.preventDefault();
     resetPage();
     var omdbUrlFront = "https://www.omdbapi.com/?apikey=" + movieApiKey + "&t=";
     var userSelection = searchInputEl.value.trim();
     var completeUrl = omdbUrlFront + userSelection;
-    var userInputTrimmed = $('<button class="previousSearchItemBtn" type="button>');
+    var userInputTrimmed = $('<button class="previousSearchItemBtn" type="button">');
     userInputTrimmed.click(function(event) {
         event.preventDefault();
         var value = $(this).text();
@@ -95,7 +99,7 @@ function pullStorageMovie() {
     if(localStorage.getItem("storageMovie")) {
         storageMovie = JSON.parse(localStorage.getItem("storageMovie"));
         for (let k = 0; k < storageMovie.length; k++) {
-            var userInputTrimmed = $('<button class="previousSearchItemBtn" type="button>');
+            var userInputTrimmed = $('<button class="previousSearchItemBtn" type="button">');
             userInputTrimmed.click(function(event) {
                 event.preventDefault();
                 var value = $(this).text();
@@ -103,7 +107,7 @@ function pullStorageMovie() {
                 searching(event, value);
             });
             userInputTrimmed.text(storageMovie[k]);
-            userInputTrimmed.on("click",searching);
+            userInputTrimmed.on("click", searching);
             previousSearchesBox.append(userInputTrimmed);    
         }
     }
@@ -111,7 +115,11 @@ function pullStorageMovie() {
 
 pullStorageMovie();
 
-searchBtnEl.on("click", searching);
+// searchBtnEl.on("click", searching);
+formSearchEl.addEventListener("submit", function(event) {
+    event.preventDefault();
+    searching(event, searchInputEl.value);
+});
 
 //Page Reset
 function resetPage() {
