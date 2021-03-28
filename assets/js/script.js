@@ -1,5 +1,6 @@
 const movieApiKey = "f3192513";
-var searchInputEl = document.querySelector("#searchInput"); //Yes this line is JavaScript. Lol
+//Reminder, below line is pure JavaScript
+var searchInputEl = document.querySelector("#searchInput"); 
 var searchBtnEl = $("#searchBtn");
 var thumbnailEl = $("#thumbnail");
 var yearEl = $("#year");
@@ -13,6 +14,9 @@ var plotText;
 var modalEl = document.getElementById("errorModal");
 var closeModalEl = document.getElementById("closeModal");
 
+//Local storage for movie names
+var storageMovie = [];
+
 var requestOptions = {
     method: "Get",
     redirect: "Follow"
@@ -24,6 +28,28 @@ function searching(event) {
     var omdbUrlFront = "https://www.omdbapi.com/?apikey=" + movieApiKey + "&t=";
     var userSelection = searchInputEl.value.trim();
     var completeUrl = omdbUrlFront + userSelection;
+    var userInputTrimmed = $('<button class="previousSearchItemBtn" type="button>');
+    userInputTrimmed.click(function(event) {
+        event.preventDefault();
+        var value = $(this).text();
+        console.log(value);
+        searching(event, value);
+    });
+
+//Element in localstorage check
+if(storageMovie.indexOf(userSelection) === -1) {
+    storageMovie.push(userSelection);
+    localStorage.setItem("storageMovie", JSON.stringify(storageMovie));
+
+
+}
+
+
+
+
+
+
+
     // console.log(completeUrl);
     fetch(completeUrl)
         .then(function (response) {
