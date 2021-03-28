@@ -1,8 +1,9 @@
 const movieApiKey = "f3192513";
 //Reminder, below line is pure JavaScript
 var searchInputEl = document.querySelector("#searchInput");
-var formSearchEl = document.querySelector("#formSearch"); 
+// var formSearchEl = document.querySelector("#formSearch"); 
 var searchBtnEl = $("#searchBtn");
+var searchNewBtnEl = document.querySelector("#searchBtn");
 var thumbnailEl = $("#thumbnail");
 var yearEl = $("#year");
 var titleEl = $("#title");
@@ -116,7 +117,7 @@ function pullStorageMovie() {
 pullStorageMovie();
 
 // searchBtnEl.on("click", searching);
-formSearchEl.addEventListener("submit", function(event) {
+searchNewBtnEl.addEventListener("click", function(event) {
     event.preventDefault();
     searching(event, searchInputEl.value);
 });
