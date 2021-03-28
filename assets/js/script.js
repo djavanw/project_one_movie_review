@@ -60,7 +60,7 @@ function searching(event, userSelection) {
         })
         .then(function (data) {
             console.log(data);
-           //if (data.Response === "True") {
+           if (data.Response === "True") {
                 plotText = data.Plot;
                 thumbnailEl.attr("src", data.Poster);
                 titleEl.text(data.Title);
@@ -68,11 +68,11 @@ function searching(event, userSelection) {
                 plotSumEl.text(plotText);
                 for (var i = 0; i < data.Ratings.length; i++) {
                     $(`#ratings${i}`).text(`${data.Ratings[i].Source}: ${data.Ratings[i].Value}`);
-            //    }
-            //} else {
-            //      modalEl.style.display = "block";
-            //      closeModalEl.addEventListener("click", turnModalOff);
-            //      window.addEventListener("click", turnModalOff);
+               }
+            } else {
+                 modalEl.style.display = "block";
+                 closeModalEl.addEventListener("click", turnModalOff);
+                 window.addEventListener("click", turnModalOff);
 
            }
 
