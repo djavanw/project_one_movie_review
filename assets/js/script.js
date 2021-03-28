@@ -91,7 +91,7 @@ if(storageMovie.indexOf(userSelection) === -1) {
                     movieTrailerEl.attr("href", data.link);
                     // console.log(movieTrailerEl.attr);
                 });
-        })
+        });
 }
 
 //Function to pull movie name from storage
