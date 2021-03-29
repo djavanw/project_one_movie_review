@@ -98,11 +98,6 @@ function searching(event, userSelection) {
         });
 }
 
-
-
-
-
-
 //Function to pull movie name from storage
 function pullStorageMovie() {
     if(localStorage.getItem("storageMovie")) {
