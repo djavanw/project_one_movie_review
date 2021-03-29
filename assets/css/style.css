@@ -22,3 +22,7 @@ p.results {
     max-width: 100%;
     transform: translate(-50%, -50%);
 }
+
+#preBtns {
+    display: none;
+}

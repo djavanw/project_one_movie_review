@@ -21,7 +21,6 @@ var storageMovie = [];
 var previousSearchesBox = $("#previousSearches");
 var userSelection;
 
-
 var requestOptions = {
     method: "Get",
     redirect: "Follow"
@@ -30,7 +29,7 @@ var requestOptions = {
 //Function to start the movie search
 function searching(event, userSelection) {
     event.preventDefault();
-    resetPage(); 
+    resetPage();
     console.log(event);
     var omdbUrlFront = "https://www.omdbapi.com/?apikey=" + movieApiKey + "&t=";
     // userSelection = searchInputEl.value.trim();
@@ -39,7 +38,7 @@ function searching(event, userSelection) {
     console.log(userSelection);
     var userInputTrimmed = $('<button class="previousSearchItemBtn" type="button">');
     userInputTrimmed.click(function(event) {
-         event.preventDefault();
+        event.preventDefault();
          var value = $(this).text();
          console.log(value);
          searching(event, value);
@@ -109,7 +108,13 @@ function pullStorageMovie() {
                 event.preventDefault();
                 var value = $(this).text();
                 console.log(value);
-                searching(event, value);
+                if (value === null) {
+                    searching(event);
+                } else {
+                    console.log(value);
+                    searching(event, value);
+                }
+                
             });
             userInputTrimmed.text(storageMovie[k]);
             userInputTrimmed.on("click", searching);
