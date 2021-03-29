@@ -104,13 +104,16 @@ function pullStorageMovie() {
         for (let k = 0; k < storageMovie.length; k++) {
             var userInputTrimmed = $('<button class="previousSearchItemBtn" type="button">');
             console.log(userInputTrimmed);
+            
+            $(document).ready(function() {
             userInputTrimmed.click(function(event) {
                 event.preventDefault();
                 var value = $(this).text();
                 console.log(value);
                 searching(event, value);
-                             
+             });
             });
+            
             userInputTrimmed.text(storageMovie[k]);
             userInputTrimmed.on("click", searching);
             previousSearchesBox.append(userInputTrimmed);    
