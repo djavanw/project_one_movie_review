@@ -9,6 +9,7 @@ The web technologies used in this application include:  HTML, CSS, JavaScript, a
 
 ![Movie Reviews Before Use](./assets/images/movie_review_page.jpeg)
 ![Active Movie Search](./assets/images/movie_review_search_page.jpeg)
+![Active Movie Search From Local Storage](./assets/images/movie_search_with_local_storage.jpeg)
 
 ## Webpage URL
 
