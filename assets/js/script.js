@@ -108,13 +108,8 @@ function pullStorageMovie() {
                 event.preventDefault();
                 var value = $(this).text();
                 console.log(value);
-                if (value === null) {
-                    searching(event);
-                } else {
-                    console.log(value);
-                    searching(event, value);
-                }
-                
+                searching(event, value);
+                             
             });
             userInputTrimmed.text(storageMovie[k]);
             userInputTrimmed.on("click", searching);
