@@ -1,9 +1,8 @@
 const movieApiKey = "f3192513";
-//Reminder, below line is pure JavaScript
+//Reminder, below tow line are pure JavaScript variables
 var searchInputEl = document.querySelector("#searchInput");
-// var formSearchEl = document.querySelector("#formSearch"); 
 var searchNewBtnEl = document.querySelector("#searchBtn");
-// var searchBtnEl = $("#searchBtn");
+
 var thumbnailEl = $("#thumbnail");
 var yearEl = $("#year");
 var titleEl = $("#title");
@@ -21,38 +20,85 @@ var storageMovie = [];
 var previousSearchesBox = $("#previousSearches");
 var userSelection;
 
-var requestOptions = {
-    method: "Get",
-    redirect: "Follow"
-};
+// var requestOptions = {
+//     method: "Get",
+//     redirect: "Follow"
+// };
 
-//Function to start the movie search
-function searching(event, userSelection) {
-    event.preventDefault();
-    resetPage();
+//Function to start the movie from text search
+function textSearch(event) {
     console.log(event);
+    resetPage();
     var omdbUrlFront = "https://www.omdbapi.com/?apikey=" + movieApiKey + "&t=";
-    // userSelection = searchInputEl.value.trim();
+    userSelection = searchInputEl.value;
     var completeUrl = omdbUrlFront + userSelection;
-    console.log(completeUrl);
     console.log(userSelection);
-    var userInputTrimmed = $('<button class="previousSearchItemBtn" type="button">');
-    userInputTrimmed.click(function(event) {
-        event.preventDefault();
-         var value = $(this).text();
-         console.log(value);
-         searching(event, value);
-    });
 
-    //Element in localstorage check
+    //Checking localstorage for match & storage pull
     if(storageMovie.indexOf(userSelection) === -1) {
         storageMovie.push(userSelection);
         localStorage.setItem("storageMovie", JSON.stringify(storageMovie));
-        userInputTrimmed.text(userSelection);
-        previousSearchesBox.append(userInputTrimmed);
+        pullStorageMovie();
     }
 
-    // console.log(completeUrl);
+    fetch(completeUrl)
+    .then(function (response) {
+        return response.json()
+    })
+    .then(function (data) {
+        console.log(data);
+       if (data.Response === "True") {
+            plotText = data.Plot;
+            thumbnailEl.attr("src", data.Poster);
+            titleEl.text(data.Title);
+            yearEl.text(data.Released);
+            plotSumEl.text(plotText);
+            for (var i = 0; i < data.Ratings.length; i++) {
+                $(`#ratings${i}`).text(`${data.Ratings[i].Source}: ${data.Ratings[i].Value}`);
+           }
+        } else {
+            //Modal error message for wrong information
+             modalEl.style.display = "block";
+             closeModalEl.addEventListener("click", turnModalOff);
+             window.addEventListener("click", turnModalOff);
+        }
+
+        function turnModalOff() {
+            modalEl.style.display = "none";
+        }
+
+        //Movie Trailer Pull from text search
+        const imdbKey = "k_ogun1xnq/";
+        var imdbFront = "https://imdb-api.com/en/API/Trailer/" + imdbKey;
+        var trailerId = data.imdbID;
+        var imdbUrl = imdbFront + trailerId;
+        console.log(trailerId);
+        console.log(imdbUrl);
+        fetch(imdbUrl)
+            .then(function (response) {
+                return response.json()
+            })
+            .then(function (data) {
+                console.log(data);
+                var movieTrailerEl = $("#trailer-url");
+                movieTrailerEl.attr("href", data.link);
+                console.log(movieTrailerEl.attr);
+            });
+    })
+}
+
+//Function to start the movie search with button
+function searching(event) {
+    resetPage();
+    console.log(event);
+    var omdbUrlFront = "https://www.omdbapi.com/?apikey=" + movieApiKey + "&t=";
+    var completeUrl = omdbUrlFront + event.target.outerText;
+    console.log(completeUrl);
+    console.log(userSelection);
+
+    pullStorageMovie();  //You may need to put this back in the above function
+
+
     fetch(completeUrl)
         .then(function (response) {
             return response.json()
@@ -78,9 +124,9 @@ function searching(event, userSelection) {
             function turnModalOff() {
                 modalEl.style.display = "none";
             }
-            // imdbipa pull
-            //'https://imdb-api.com/en/API/Trailer//tt1375666'
-            const imdbKey = "k_ogun1xnq";
+
+            //imdbipa pull from previous button pull
+            const imdbKey = "k_ogun1xnq/";
             var imdbFront = "https://imdb-api.com/en/API/Trailer/" + imdbKey;
             var trailerId = data.imdbID;
             var imdbUrl = imdbFront + trailerId;
@@ -97,25 +143,17 @@ function searching(event, userSelection) {
         });
 }
 
+
 //Function to pull movie name from storage
 function pullStorageMovie() {
+    previousSearchesBox.html("");
     if(localStorage.getItem("storageMovie")) {
         storageMovie = JSON.parse(localStorage.getItem("storageMovie"));
         for (let k = 0; k < storageMovie.length; k++) {
             var userInputTrimmed = $('<button class="previousSearchItemBtn" type="button">');
             console.log(userInputTrimmed);
-            userInputTrimmed.click(function(event) {
-                event.preventDefault();
-                var value = $(this).text();
-                console.log(value);
-                if (value === null) {
-                    searching(event);
-                } else {
-                    console.log(value);
-                    searching(event, value);
-                }
-                
-            });
+            var value = $(this).text();
+            console.log(value);
             userInputTrimmed.text(storageMovie[k]);
             userInputTrimmed.on("click", searching);
             previousSearchesBox.append(userInputTrimmed);    
@@ -125,11 +163,8 @@ function pullStorageMovie() {
 
 pullStorageMovie();
 
-// searchBtnEl.on("click", searching);
-searchNewBtnEl.addEventListener("click", function(event) {
-    event.preventDefault();
-    searching(event, searchInputEl.value);
-});
+//Starts a search from the text input field
+searchNewBtnEl.addEventListener("click", textSearch);
 
 //Page Reset
 function resetPage() {
@@ -143,19 +178,6 @@ function resetPage() {
     $("#plotTranslate").text("");
 }
 
-//Error Message status = data.Response
-//This code does not work and was replaced on line 44 - 52
-// function errorMessage(status) {
-//     if (status === "True") {
-//         return;
-//     } else {
-//         // console.log("Error!");
-//         $(".modal").attr({
-//             "class": "is-active"
-//         })
-//         $(".modal-content").text(`${userSelection} is not recognized as a movie title. Please check the spelling and try again.`)
-//     }
-// }
 
 //Yoda Translation
 function translateYoda() {
