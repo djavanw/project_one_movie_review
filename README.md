@@ -30,6 +30,8 @@ The web technologies used in this application include:  HTML, CSS, JavaScript, a
 - Travis Springer
 - D.J. Worthy
 
+- If there are any questions, the contributor can be reached at fakemail@qmail.us.com.
+
 [Link to Original Project](https://github.com/davidboerm/project-1)
 
 ## License
